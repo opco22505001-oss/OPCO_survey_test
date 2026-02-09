@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html class="light" lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>고객 만족도 설문조사</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen font-display">
+    <div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+        <!-- Sticky Header with Navigation and Progress -->
+        <header class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-solid border-slate-200 dark:border-slate-800 px-4 md:px-10 py-3">
+            <div class="max-w-[800px] mx-auto flex items-center justify-between">
+                <div class="flex items-center gap-4 text-slate-900 dark:text-white">
+                    <div class="text-primary">
+                        <span class="material-symbols-outlined text-3xl">assignment</span>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold leading-tight tracking-tight">고객 만족도 설문조사 2024</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Section: 전반적인 경험</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="hidden md:block text-right">
+                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Progress</p>
+                        <p class="text-sm font-bold text-primary" id="progressText">0%</p>
+                    </div>
+                    <div class="bg-slate-200 dark:bg-slate-700 rounded-full h-10 w-10 flex items-center justify-center overflow-hidden border-2 border-primary/20">
+                        <div class="bg-center bg-no-repeat bg-cover h-full w-full" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDxsOx803nqf1RLuXTWd4pCgE4TjQPiqryupmAco6nYFWi_vnZgI3wLwBGDxDnNa8HC8aI8sZs8_lPi0r7gzwKlmocjFBS4lBMowq4c_sk57CJI4e-VYaxa0ptk1-FZh8tR64utRR1CXXltHwlRjI63u0dnKiHqRxT36aIdXcSc0zz3qGSu15NwAYXaDhlE1tj_NmhNIaMixSh8Am4xSVq0h3t46--vju0uy-ehSji5B8vXMB4B0JnzCS305r2QWcP_bPC3ljnzf2-T");'></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Progress Bar -->
+            <div class="max-w-[800px] mx-auto mt-3">
+                <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                    <div id="progressBar" class="bg-primary h-full transition-all duration-500" style="width: 0%;"></div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 flex flex-col items-center py-10 px-4">
+            <div class="w-full max-w-[800px] flex flex-col gap-8">
+                <!-- Introduction Card -->
+                <div class="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2 text-center md:text-left">
+                        <span id="welcomeName"></span>님, 환영합니다
+                    </h1>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-center md:text-left">
+                        2024년 고객 만족도 설문조사에 참여해 주셔서 감사합니다. 귀하의 소중한 의견은 서비스 개선에 큰 도움이 됩니다.
+                        본 설문은 전반적인 경험 및 제품 사용에 관한 내용입니다.
+                    </p>
+                </div>
+
+                <!-- Section Divider -->
+                <div class="flex items-center gap-4 px-2">
+                    <span class="h-px bg-slate-200 dark:bg-slate-800 flex-1"></span>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">설문 질문</span>
+                    <span class="h-px bg-slate-200 dark:bg-slate-800 flex-1"></span>
+                </div>
+
+                <form id="surveyForm">
+                    <!-- Question 1: Multiple Choice -->
+                    <div class="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-800 shadow-sm transition-all hover:border-primary/30 mb-8">
+                        <div class="flex items-start gap-4 mb-6">
+                            <span class="bg-primary/10 text-primary font-bold px-3 py-1 rounded text-sm">01</span>
+                            <h3 class="text-lg font-semibold text-slate-900 dark:text-white">우리 플랫폼을 얼마나 자주 사용하시나요?</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <label class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-800 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                                <input class="w-5 h-5 text-primary border-slate-300 focus:ring-primary" name="frequency" type="radio" value="하루에 여러 번" required/>
+                                <span class="text-slate-700 dark:text-slate-300 font-medium">하루에 여러 번</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-800 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                                <input class="w-5 h-5 text-primary border-slate-300 focus:ring-primary" name="frequency" type="radio" value="하루에 한 번"/>
+                                <span class="text-slate-700 dark:text-slate-300 font-medium">하루에 한 번</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-800 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                                <input class="w-5 h-5 text-primary border-slate-300 focus:ring-primary" name="frequency" type="radio" value="주 2-3회"/>
+                                <span class="text-slate-700 dark:text-slate-300 font-medium">주 2-3회</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-800 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                                <input class="w-5 h-5 text-primary border-slate-300 focus:ring-primary" name="frequency" type="radio" value="거의 사용하지 않음"/>
+                                <span class="text-slate-700 dark:text-slate-300 font-medium">거의 사용하지 않음</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 2: Rating Scale -->
+                    <div class="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-800 shadow-sm transition-all hover:border-primary/30 mb-8">
+                        <div class="flex items-start gap-4 mb-6">
+                            <span class="bg-primary/10 text-primary font-bold px-3 py-1 rounded text-sm">02</span>
+                            <h3 class="text-lg font-semibold text-slate-900 dark:text-white">1~10점 척도로, 우리 서비스를 동료에게 추천하실 의향이 얼마나 되시나요?</h3>
+                        </div>
+                        <div class="flex flex-col gap-6">
+                            <div class="flex justify-between items-center gap-1 overflow-x-auto pb-4">
+                                <button type="button" onclick="selectRating(1)" class="rating-btn flex-1 min-w-[36px] aspect-square flex items-center justify-center rounded border border-slate-200 dark:border-slate-700 hover:bg-primary/10 hover:border-primary text-slate-600 dark:text-slate-400 font-bold transition-all" data-rating="1">1</button>
+                                <button type="button" onclick="selectRating(2)" class="rating-btn flex-1 min-w-[36px] aspect-square flex items-center justify-center rounded border border-slate-200 dark:border-slate-700 hover:bg-primary/10 hover:border-primary text-slate-600 dark:text-slate-400 font-bold transition-all" data-rating="2">2</button>
+                                <button type="button" onclick="selectRating(3)" class="rating-btn flex-1 min-w-[36px] aspect-square flex items-center justify-center rounded border border-slate-200 dark:border-slate-700 hover:bg-primary/10 hover:border-primary text-slate-600 dark:text-slate-400 font-bold transition-all" data-rating="3">3</button>
+                                <button type="button" onclick="selectRating(4)" class="rating-btn flex-1 min-w-[36px] aspect-square flex items-center justify-center rounded border border-slate-200 dark:border-slate-700 hover:bg-primary/10 hover:border-primary text-slate-600 dark:text-slate-400 font-bold transition-all" data-rating="4">4</button>
+                                <button type="button" onclick="selectRating(5)" class="rating-btn flex-1 min-w-[36px] aspect-square flex items-center justify-center rounded border border-slate-200 dark:border-slate-700 hover:bg-primary/10 hover:border-primary text-slate-600 dark:text-slate-400 font-bold transition-all" data-rating="5">5</button>
+                                <button type="button" onclick="selectRating(6)" class="rating-btn flex-1 min-w-[36px] aspect-square flex items-center justify-center rounded border border-slate-200 dark:border-slate-700 hover:bg-primary/10 hover:border-primary text-slate-600 dark:text-slate-400 font-bold transition-all" data-rating="6">6</button>
+                                <button type="button" onclick="selectRating(7)" class="rating-btn flex-1 min-w-[36px] aspect-square flex items-center justify-center rounded border border-slate-200 dark:border-slate-700 hover:bg-primary/10 hover:border-primary text-slate-600 dark:text-slate-400 font-bold transition-all" data-rating="7">7</button>
+                                <button type="button" onclick="selectRating(8)" class="rating-btn flex-1 min-w-[36px] aspect-square flex items-center justify-center rounded border border-slate-200 dark:border-slate-700 hover:bg-primary/10 hover:border-primary text-slate-600 dark:text-slate-400 font-bold transition-all" data-rating="8">8</button>
+                                <button type="button" onclick="selectRating(9)" class="rating-btn flex-1 min-w-[36px] aspect-square flex items-center justify-center rounded border border-slate-200 dark:border-slate-700 hover:bg-primary/10 hover:border-primary text-slate-600 dark:text-slate-400 font-bold transition-all" data-rating="9">9</button>
+                                <button type="button" onclick="selectRating(10)" class="rating-btn flex-1 min-w-[36px] aspect-square flex items-center justify-center rounded border border-slate-200 dark:border-slate-700 hover:bg-primary/10 hover:border-primary text-slate-600 dark:text-slate-400 font-bold transition-all" data-rating="10">10</button>
+                            </div>
+                            <input type="hidden" name="recommendation" id="recommendationInput" required/>
+                            <div class="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-widest px-1">
+                                <span>추천하지 않음</span>
+                                <span>매우 추천함</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 3: Short Text Area -->
+                    <div class="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-800 shadow-sm transition-all hover:border-primary/30 mb-8">
+                        <div class="flex items-start gap-4 mb-6">
+                            <span class="bg-primary/10 text-primary font-bold px-3 py-1 rounded text-sm">03</span>
+                            <h3 class="text-lg font-semibold text-slate-900 dark:text-white">우리 플랫폼에 추가되었으면 하는 기능이 있으신가요?</h3>
+                        </div>
+                        <div class="relative">
+                            <textarea
+                                id="featureRequest"
+                                name="featureRequest"
+                                class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400"
+                                placeholder="원하시는 기능을 자유롭게 설명해 주세요..."
+                                rows="4"
+                                maxlength="500"
+                            ></textarea>
+                            <div class="absolute bottom-4 right-4 text-xs text-slate-400 font-medium" id="charCount">0 / 500</div>
+                        </div>
+                        <p class="mt-3 text-sm text-slate-500 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">info</span>
+                            선택사항이지만 소중한 의견입니다.
+                        </p>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="errorMessage" class="hidden mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                        <p class="text-sm text-red-600 dark:text-red-400 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">error</span>
+                            <span id="errorText"></span>
+                        </p>
+                    </div>
+
+                    <!-- Success Message -->
+                    <div id="successMessage" class="hidden mb-8 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                        <p class="text-sm text-green-600 dark:text-green-400 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">check_circle</span>
+                            <span id="successText"></span>
+                        </p>
+                    </div>
+
+                    <!-- Footer Navigation -->
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-6 py-6 border-t border-slate-200 dark:border-slate-800">
+                        <div class="flex items-center gap-2 text-slate-500">
+                            <span class="material-symbols-outlined">lock</span>
+                            <span class="text-sm font-medium">귀하의 데이터는 안전하게 보호됩니다.</span>
+                        </div>
+                        <div class="flex items-center gap-4 w-full md:w-auto">
+                            <button
+                                type="button"
+                                onclick="goBack()"
+                                class="flex-1 md:flex-none px-8 py-3 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                            >
+                                이전으로
+                            </button>
+                            <button
+                                type="submit"
+                                id="submitBtn"
+                                class="flex-1 md:flex-none px-12 py-3 rounded-lg bg-primary text-white font-bold shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all active:scale-[0.98]"
+                            >
+                                제출하기
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <p class="text-center text-slate-400 text-sm pb-10">
+                    © 2024 SurveyQuest Inc. All rights reserved.
+                </p>
+            </div>
+        </main>
+
+        <!-- Floating Quick Support -->
+        <button class="fixed bottom-6 right-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl rounded-full p-4 flex items-center justify-center text-primary hover:scale-110 transition-transform z-40">
+            <span class="material-symbols-outlined">help_outline</span>
+        </button>
+    </div>
+
+    <script>
+        // Google Apps Script Web App URL (사용자가 나중에 설정)
+        const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+        let selectedRating = null;
+
+        // Load user info from localStorage
+        window.addEventListener('load', function() {
+            const userName = localStorage.getItem('surveyUserName');
+            const userPhone = localStorage.getItem('surveyUserPhone');
+
+            if (!userName || !userPhone) {
+                alert('로그인 정보가 없습니다. 다시 로그인해 주세요.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('welcomeName').textContent = userName;
+            updateProgress();
+        });
+
+        // Rating button selection
+        function selectRating(rating) {
+            selectedRating = rating;
+            document.getElementById('recommendationInput').value = rating;
+
+            // Update button styles
+            document.querySelectorAll('.rating-btn').forEach(btn => {
+                const btnRating = parseInt(btn.dataset.rating);
+                if (btnRating === rating) {
+                    btn.classList.add('bg-primary', 'text-white', 'border-primary');
+                    btn.classList.remove('border-slate-200', 'dark:border-slate-700', 'text-slate-600', 'dark:text-slate-400');
+                } else {
+                    btn.classList.remove('bg-primary', 'text-white', 'border-primary');
+                    btn.classList.add('border-slate-200', 'dark:border-slate-700', 'text-slate-600', 'dark:text-slate-400');
+                }
+            });
+
+            updateProgress();
+        }
+
+        // Character counter
+        document.getElementById('featureRequest').addEventListener('input', function() {
+            const charCount = this.value.length;
+            document.getElementById('charCount').textContent = charCount + ' / 500';
+            updateProgress();
+        });
+
+        // Progress calculation
+        function updateProgress() {
+            let completedFields = 0;
+            const totalFields = 3;
+
+            // Check frequency selection
+            if (document.querySelector('input[name="frequency"]:checked')) {
+                completedFields++;
+            }
+
+            // Check rating selection
+            if (selectedRating !== null) {
+                completedFields++;
+            }
+
+            // Check feature request (optional, but counts towards progress)
+            if (document.getElementById('featureRequest').value.trim().length > 0) {
+                completedFields++;
+            }
+
+            const progress = Math.round((completedFields / totalFields) * 100);
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressText').textContent = progress + '%';
+        }
+
+        // Form submission
+        document.getElementById('surveyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            // Get form data
+            const userName = localStorage.getItem('surveyUserName');
+            const userPhone = localStorage.getItem('surveyUserPhone');
+            const frequency = document.querySelector('input[name="frequency"]:checked')?.value;
+            const recommendation = selectedRating;
+            const featureRequest = document.getElementById('featureRequest').value.trim();
+
+            // Validation
+            if (!frequency) {
+                showError('1번 질문에 답변해 주세요.');
+                return;
+            }
+
+            if (!recommendation) {
+                showError('2번 질문에 답변해 주세요 (추천 점수를 선택해 주세요).');
+                return;
+            }
+
+            // Prepare data
+            const surveyData = {
+                timestamp: new Date().toISOString(),
+                name: userName,
+                phone: userPhone,
+                frequency: frequency,
+                recommendation: recommendation,
+                featureRequest: featureRequest || '(미입력)'
+            };
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> 제출 중...';
+
+            try {
+                // Send to Google Apps Script
+                if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                    // Demo mode - show success without actual submission
+                    console.log('Demo mode - Survey data:', surveyData);
+                    alert('데모 모드입니다.\n\nGoogle Apps Script URL을 설정하면 실제로 데이터가 저장됩니다.\n\n제출된 데이터:\n' + JSON.stringify(surveyData, null, 2));
+                    showSuccess('설문이 성공적으로 제출되었습니다! (데모 모드)');
+                } else {
+                    const response = await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(surveyData)
+                    });
+
+                    showSuccess('설문이 성공적으로 제출되었습니다! 감사합니다.');
+
+                    // Clear localStorage
+                    setTimeout(() => {
+                        localStorage.clear();
+                        window.location.href = 'login.html';
+                    }, 3000);
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                showError('제출 중 오류가 발생했습니다. 다시 시도해 주세요.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '제출하기';
+            }
+        });
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            const successMessage = document.getElementById('successMessage');
+
+            successMessage.classList.add('hidden');
+            errorText.textContent = message;
+            errorMessage.classList.remove('hidden');
+
+            errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            setTimeout(() => {
+                errorMessage.classList.add('hidden');
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successMessage = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+            const errorMessage = document.getElementById('errorMessage');
+
+            errorMessage.classList.add('hidden');
+            successText.textContent = message;
+            successMessage.classList.remove('hidden');
+
+            successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function goBack() {
+            if (confirm('이전 페이지로 돌아가시겠습니까? 입력한 내용은 저장되지 않습니다.')) {
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Track form changes
+        document.getElementById('surveyForm').addEventListener('change', updateProgress);
+    </script>
+</body>
+</html>
