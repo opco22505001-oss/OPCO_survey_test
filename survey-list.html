@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="light" lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>설문조사 목록</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .bg-gradient-soft {
+            background: linear-gradient(135deg, #f6f7f8 0%, #e2e8f0 100%);
+        }
+        .dark .bg-gradient-soft {
+            background: linear-gradient(135deg, #101922 0%, #1e293b 100%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen font-display">
+    <!-- Top Navigation Bar -->
+    <header class="w-full bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
+                    <span class="material-symbols-outlined text-xl">poll</span>
+                </div>
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white tracking-tight">Survey System</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="logout()" class="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    <span class="material-symbols-outlined text-lg">logout</span>
+                    <span>로그아웃</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 py-10 px-4 bg-gradient-soft">
+        <div class="max-w-6xl mx-auto">
+            <!-- Welcome Header -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    안녕하세요, <span id="userName" class="text-primary"></span>님 👋
+                </h1>
+                <p class="text-gray-600 dark:text-gray-400">
+                    참여 가능한 설문조사를 선택해 주세요. 설문조사는 약 5-10분 소요됩니다.
+                </p>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="flex gap-4 mb-6 overflow-x-auto pb-2">
+                <button onclick="filterSurveys('all')" class="filter-btn active px-6 py-2 rounded-full bg-primary text-white font-semibold whitespace-nowrap">
+                    전체 보기
+                </button>
+                <button onclick="filterSurveys('active')" class="filter-btn px-6 py-2 rounded-full bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-semibold border border-gray-200 dark:border-gray-700 hover:border-primary transition-colors whitespace-nowrap">
+                    진행 중
+                </button>
+                <button onclick="filterSurveys('upcoming')" class="filter-btn px-6 py-2 rounded-full bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-semibold border border-gray-200 dark:border-gray-700 hover:border-primary transition-colors whitespace-nowrap">
+                    예정
+                </button>
+                <button onclick="filterSurveys('closed')" class="filter-btn px-6 py-2 rounded-full bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-semibold border border-gray-200 dark:border-gray-700 hover:border-primary transition-colors whitespace-nowrap">
+                    마감
+                </button>
+            </div>
+
+            <!-- Survey Cards Grid -->
+            <div id="surveyGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Survey Card 1 - Active -->
+                <div class="survey-card bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-xl transition-all cursor-pointer" data-status="active" onclick="openSurvey('survey1')">
+                    <div class="h-2 bg-green-500"></div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-xs font-bold">진행 중</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">~ 2024-12-31</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                            2024년 고객 만족도 조사
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                            올해 서비스 이용 경험에 대한 전반적인 만족도를 조사합니다.
+                        </p>
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="flex items-center gap-2 text-gray-500">
+                                <span class="material-symbols-outlined text-sm">schedule</span>
+                                <span>약 5분 소요</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-primary font-semibold">
+                                <span>참여하기</span>
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Survey Card 2 - Active -->
+                <div class="survey-card bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-xl transition-all cursor-pointer" data-status="active" onclick="openSurvey('survey2')">
+                    <div class="h-2 bg-green-500"></div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-xs font-bold">진행 중</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">~ 2024-12-25</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                            구내식당 메뉴 만족도 조사
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                            구내식당의 메뉴 품질, 다양성 등에 대한 의견을 수렴합니다.
+                        </p>
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="flex items-center gap-2 text-gray-500">
+                                <span class="material-symbols-outlined text-sm">schedule</span>
+                                <span>약 3분 소요</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-primary font-semibold">
+                                <span>참여하기</span>
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Survey Card 3 - Upcoming -->
+                <div class="survey-card bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 overflow-hidden opacity-75" data-status="upcoming">
+                    <div class="h-2 bg-blue-500"></div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full text-xs font-bold">예정</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">2025-01-01 시작</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                            신년 복지 혜택 수요 조사
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                            2025년 신규 복지 정책 수립을 위한 직원 의견 조사입니다.
+                        </p>
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="flex items-center gap-2 text-gray-500">
+                                <span class="material-symbols-outlined text-sm">schedule</span>
+                                <span>약 7분 소요</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-gray-400">
+                                <span>곧 시작됩니다</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Survey Card 4 - Closed -->
+                <div class="survey-card bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 overflow-hidden opacity-60" data-status="closed">
+                    <div class="h-2 bg-gray-400"></div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs font-bold">마감</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">2024-11-30 종료</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                            사무환경 개선 의견 조사
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                            사무실 환경 개선을 위한 직원 의견 수렴 설문입니다.
+                        </p>
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="flex items-center gap-2 text-gray-500">
+                                <span class="material-symbols-outlined text-sm">check_circle</span>
+                                <span>참여 완료 (124명)</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-gray-400">
+                                <span>종료됨</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Survey Card 5 - Active -->
+                <div class="survey-card bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-xl transition-all cursor-pointer" data-status="active" onclick="openSurvey('survey3')">
+                    <div class="h-2 bg-green-500"></div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-xs font-bold">진행 중</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">~ 2024-12-20</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                            IT 시스템 개선 의견
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                            사내 IT 인프라 및 업무 도구 개선을 위한 의견을 받습니다.
+                        </p>
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="flex items-center gap-2 text-gray-500">
+                                <span class="material-symbols-outlined text-sm">schedule</span>
+                                <span>약 4분 소요</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-primary font-semibold">
+                                <span>참여하기</span>
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Survey Card 6 - Closed -->
+                <div class="survey-card bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 overflow-hidden opacity-60" data-status="closed">
+                    <div class="h-2 bg-gray-400"></div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs font-bold">마감</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">2024-10-15 종료</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                            하반기 워크샵 의견 조사
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                            2024년 하반기 워크샵 장소 및 프로그램 선호도 조사입니다.
+                        </p>
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="flex items-center gap-2 text-gray-500">
+                                <span class="material-symbols-outlined text-sm">check_circle</span>
+                                <span>참여 완료 (87명)</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-gray-400">
+                                <span>종료됨</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State (hidden by default) -->
+            <div id="emptyState" class="hidden text-center py-20">
+                <span class="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-700 mb-4">inbox</span>
+                <p class="text-gray-500 dark:text-gray-400 text-lg">해당 상태의 설문조사가 없습니다.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-gray-800 py-6 mt-10">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-xs text-gray-500 dark:text-gray-500">
+                © 2024 Survey System. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Check if user is logged in
+        window.addEventListener('load', function() {
+            const userName = localStorage.getItem('surveyUserName');
+            if (!userName) {
+                alert('로그인이 필요합니다.');
+                window.location.href = 'login.html';
+                return;
+            }
+            document.getElementById('userName').textContent = userName;
+        });
+
+        // Logout function
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Filter surveys by status
+        function filterSurveys(status) {
+            const cards = document.querySelectorAll('.survey-card');
+            const emptyState = document.getElementById('emptyState');
+            let visibleCount = 0;
+
+            // Update button states
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-primary', 'text-white');
+                btn.classList.add('bg-white', 'dark:bg-slate-800', 'text-gray-700', 'dark:text-gray-300', 'border', 'border-gray-200', 'dark:border-gray-700');
+            });
+
+            event.target.classList.add('active', 'bg-primary', 'text-white', 'border-primary');
+            event.target.classList.remove('bg-white', 'dark:bg-slate-800', 'text-gray-700', 'dark:text-gray-300', 'border-gray-200', 'dark:border-gray-700');
+
+            // Show/hide cards based on filter
+            cards.forEach(card => {
+                if (status === 'all' || card.dataset.status === status) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Show empty state if no cards visible
+            if (visibleCount === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+            }
+        }
+
+        // Open survey (데모용 - survey.html로 이동)
+        function openSurvey(surveyId) {
+            // 실제 구현 시 surveyId를 파라미터로 전달
+            // window.location.href = 'survey.html?id=' + surveyId;
+
+            // 데모용: 기존 survey.html로 이동
+            window.location.href = 'survey.html';
+        }
+    </script>
+</body>
+</html>

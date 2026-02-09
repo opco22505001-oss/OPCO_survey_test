@@ -128,6 +128,39 @@
                             <p class="mt-1.5 text-xs text-gray-500">형식: 010-1234-5678</p>
                         </div>
 
+                        <!-- Admin Login Checkbox -->
+                        <div class="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+                            <input
+                                id="isAdmin"
+                                name="isAdmin"
+                                type="checkbox"
+                                class="w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary"
+                                onchange="toggleAdminPassword()"
+                            />
+                            <label for="isAdmin" class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer flex items-center gap-2">
+                                <span class="material-symbols-outlined text-lg">admin_panel_settings</span>
+                                관리자로 로그인
+                            </label>
+                        </div>
+
+                        <!-- Admin Password Input (Hidden by default) -->
+                        <div id="adminPasswordDiv" class="hidden">
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
+                                관리자 비밀번호
+                            </label>
+                            <div class="relative">
+                                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl">key</span>
+                                <input
+                                    id="adminPassword"
+                                    name="adminPassword"
+                                    class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-gray-900 dark:text-white placeholder:text-gray-400"
+                                    placeholder="관리자 비밀번호 입력"
+                                    type="password"
+                                />
+                            </div>
+                            <p class="mt-1.5 text-xs text-amber-600 dark:text-amber-400">⚠️ 관리자만 접근 가능합니다</p>
+                        </div>
+
                         <!-- Error Message -->
                         <div id="errorMessage" class="hidden p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
                             <p class="text-sm text-red-600 dark:text-red-400 flex items-center gap-2">
@@ -143,7 +176,7 @@
                                 id="submitBtn"
                                 class="w-full bg-primary hover:bg-blue-600 text-white font-bold py-4 rounded-lg shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2 group"
                             >
-                                설문조사 시작하기
+                                <span id="submitBtnText">설문조사 시작하기</span>
                                 <span class="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
                             </button>
                         </div>
@@ -175,12 +208,36 @@
     </main>
 
     <script>
+        // 관리자 비밀번호 (실제로는 서버에서 관리해야 하지만 데모용)
+        const ADMIN_PASSWORD = 'admin1234';
+
+        // Toggle admin password field
+        function toggleAdminPassword() {
+            const isAdmin = document.getElementById('isAdmin').checked;
+            const adminPasswordDiv = document.getElementById('adminPasswordDiv');
+            const adminPasswordInput = document.getElementById('adminPassword');
+            const submitBtnText = document.getElementById('submitBtnText');
+
+            if (isAdmin) {
+                adminPasswordDiv.classList.remove('hidden');
+                adminPasswordInput.setAttribute('required', 'required');
+                submitBtnText.textContent = '관리자 대시보드로 이동';
+            } else {
+                adminPasswordDiv.classList.add('hidden');
+                adminPasswordInput.removeAttribute('required');
+                adminPasswordInput.value = '';
+                submitBtnText.textContent = '설문조사 시작하기';
+            }
+        }
+
         // Form submission handler
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
             const userName = document.getElementById('userName').value.trim();
             const userPhone = document.getElementById('userPhone').value.trim();
+            const isAdmin = document.getElementById('isAdmin').checked;
+            const adminPassword = document.getElementById('adminPassword').value;
             const errorMessage = document.getElementById('errorMessage');
             const errorText = document.getElementById('errorText');
             const submitBtn = document.getElementById('submitBtn');
@@ -196,18 +253,35 @@
                 return;
             }
 
+            // Admin login validation
+            if (isAdmin) {
+                if (!adminPassword) {
+                    showError('관리자 비밀번호를 입력해 주세요');
+                    return;
+                }
+                if (adminPassword !== ADMIN_PASSWORD) {
+                    showError('관리자 비밀번호가 올바르지 않습니다');
+                    return;
+                }
+            }
+
             // Save to localStorage
             localStorage.setItem('surveyUserName', userName);
             localStorage.setItem('surveyUserPhone', userPhone);
             localStorage.setItem('surveyStartTime', new Date().toISOString());
+            localStorage.setItem('isAdmin', isAdmin ? 'true' : 'false');
 
             // Show loading state
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> 이동 중...';
 
-            // Redirect to survey page
+            // Redirect based on user type
             setTimeout(() => {
-                window.location.href = 'survey.html';
+                if (isAdmin) {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'survey-list.html';
+                }
             }, 500);
         });
 
